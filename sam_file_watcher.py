@@ -11,7 +11,8 @@ class SamHandler(FileSystemEventHandler):
 
     IGNORED_DIRS = [
         '.idea',
-        '.aws-sam'
+        '.aws-sam',
+        '.git'
     ]
 
     def __init__(self, target_path=None, sam_path=None):
@@ -23,7 +24,7 @@ class SamHandler(FileSystemEventHandler):
     def on_modified(self, event):
         if not event.is_directory and not event.src_path[-1] == '~':
             if event.src_path.split('\\')[1] not in self.IGNORED_DIRS:
-                dest_path = self.sam_path + event.src_path.replace(self.target_path, '').lstrip('\\')
+                dest_path = self.sam_path + event.src_path.lstrip('.\\')
                 print("Copying File: \n\tSource:{src} \n\tDest:{dest} ".format(src=event.src_path, dest=dest_path))
                 shutil.copy(event.src_path, dest_path)
 
